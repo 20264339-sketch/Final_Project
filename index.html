@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kindred – A place to feel understood</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ---------- Color scheme (from your design draft) ---------- */
+    :root {
+      --deep-teal: #245B63;   /* headings, important elements */
+      --soft-teal: #A9D6D2;   /* buttons and highlights */
+      --soft-blue: #E8EFF8;   /* background sections */
+      --white: #FFFFFF;       /* main background */
+      --lavender: #D9C9EC;    /* small accents */
+      --text: #2B3A3D;        /* body text (dark for contrast) */
+      --muted: #5A6B6E;
+      --line: #CFE0DE;
+      --radius: 14px;
+      --serif: "Lora", Georgia, serif;
+      --sans: "Lato", system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; font-family: var(--sans); color: var(--text);
+      background: var(--white); line-height: 1.6;
+    }
+    h1, h2, h3 { font-family: var(--serif); color: var(--deep-teal); font-weight: 500; line-height: 1.2; margin: 0 0 .5rem; }
+    h1 { font-size: clamp(2.3rem, 5vw, 3.6rem); }
+    h2 { font-size: clamp(1.6rem, 3vw, 2.1rem); }
+    h3 { font-size: 1.1rem; }
+    p { margin: 0 0 1rem; max-width: 65ch; }
+    a { color: var(--deep-teal); }
+    .container { width: min(1120px, 100% - 2.5rem); margin-inline: auto; }
+    .muted { color: var(--muted); }
+
+    /* Keyboard focus (accessibility) */
+    :focus-visible { outline: 3px solid var(--deep-teal); outline-offset: 3px; border-radius: 6px; }
+    .skip-link { position: absolute; left: -999px; top: 0; background: var(--deep-teal); color: #fff; padding: .6rem 1rem; z-index: 10; }
+    .skip-link:focus { left: 0; }
+
+    /* ---------- Buttons ---------- */
+    .btn {
+      display: inline-block; padding: .7rem 1.3rem; border-radius: 8px;
+      font: 700 .95rem var(--sans); text-decoration: none; cursor: pointer;
+      border: 1.5px solid var(--deep-teal);
+    }
+    .btn-primary { background: var(--deep-teal); color: #fff; }
+    .btn-primary:hover { background: #1b4950; }
+    .btn-outline { background: #fff; color: var(--deep-teal); }
+    .btn-outline:hover { background: var(--soft-blue); }
+    .btn-soft { background: var(--soft-teal); color: var(--deep-teal); border-color: var(--soft-teal); }
+    .btn-soft:hover { background: #95c9c4; }
+
+    /* ---------- Header ---------- */
+    .site-header { background: var(--white); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 5; }
+    .nav { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; padding: .9rem 0; flex-wrap: wrap; }
+    .logo { font: 500 1.6rem var(--serif); color: var(--deep-teal); text-decoration: none; }
+    .nav ul { display: flex; gap: 1.6rem; list-style: none; margin: 0; padding: 0; }
+    .nav ul a { text-decoration: none; font-size: .95rem; padding: .3rem 0; }
+    .nav ul a:hover { text-decoration: underline; text-underline-offset: 5px; }
+    .nav-actions { display: flex; align-items: center; gap: 1rem; }
+    .nav-actions .login { text-decoration: none; font-weight: 700; font-size: .95rem; }
+
+    /* ---------- Hero ---------- */
+    .hero { background: var(--soft-blue); padding: 4rem 0; }
+    .hero-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 3rem; align-items: center; }
+    .hero .tagline { font-weight: 700; color: var(--deep-teal); font-size: .9rem; margin-bottom: 1rem; }
+    .hero p.lead { font-size: 1.1rem; color: var(--muted); }
+    .hero-actions { display: flex; gap: .8rem; flex-wrap: wrap; margin: 1.5rem 0 1rem; }
+    .hero-figure { position: relative; margin: 0; }
+    .hero-figure img, .hero-placeholder {
+      width: 100%; aspect-ratio: 4 / 3.2; object-fit: cover; display: block;
+      border-radius: 20px 20px 70px 20px; background: var(--soft-teal);
+    }
+    .hero-quote {
+      position: absolute; left: -1.2rem; bottom: 2rem; max-width: 270px;
+      background: var(--white); border-radius: 12px; padding: 1rem 1.2rem;
+      font-family: var(--serif); color: var(--deep-teal); box-shadow: 0 6px 20px rgba(36,91,99,.15);
+    }
+    .hero-quote small { display: block; font: .8rem var(--sans); color: var(--muted); margin-top: .3rem; }
+
+    /* ---------- Trust strip ---------- */
+    .trust { background: var(--white); border-bottom: 1px solid var(--line); }
+    .trust-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; padding: 1.4rem 0; }
+    .trust strong { display: block; color: var(--deep-teal); font-size: .95rem; }
+    .trust span { font-size: .85rem; color: var(--muted); }
+
+    /* ---------- Section basics ---------- */
+    section { padding: 4rem 0; }
+    .section-head { display: flex; justify-content: space-between; align-items: end; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.8rem; }
+    .search input {
+      width: 280px; max-width: 100%; padding: .65rem 1rem; border: 1.5px solid var(--line);
+      border-radius: 8px; font: 1rem var(--sans); background: #fff;
+    }
+    .search label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+    /* ---------- Community cards ---------- */
+    .groups { background: var(--white); }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1.1rem; }
+    .group-card {
+      display: block; text-decoration: none; color: inherit; background: #fff;
+      border: 1.5px solid var(--line); border-radius: var(--radius); padding: 1.3rem;
+    }
+    .group-card:hover { border-color: var(--deep-teal); }
+    .group-card p { color: var(--muted); font-size: .92rem; }
+    .group-card .stats { font-size: .82rem; color: var(--muted); margin: 1.3rem 0 0; }
+    .group-card .stats b { display: block; color: var(--deep-teal); }
+    .chips { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin-top: 1.4rem; }
+    .chip { background: var(--soft-teal); color: var(--deep-teal); padding: .25rem .8rem; border-radius: 999px; font-size: .82rem; text-decoration: none; }
+    .chip.lavender { background: var(--lavender); }
+
+    /* ---------- Conversations + sidebar ---------- */
+    .conversations { background: var(--soft-blue); }
+    .conv-layout { display: grid; grid-template-columns: 1fr 340px; gap: 2rem; align-items: start; }
+    .tabs { display: flex; gap: 1.4rem; border-bottom: 1px solid var(--line); margin-bottom: 1.2rem; }
+    .tabs button { background: none; border: 0; padding: .6rem 0; font: 700 .9rem var(--sans); color: var(--muted); cursor: pointer; border-bottom: 3px solid transparent; }
+    .tabs button[aria-selected="true"] { color: var(--deep-teal); border-bottom-color: var(--deep-teal); }
+    .welcome-note { background: var(--white); border-left: 4px solid var(--lavender); border-radius: 8px; padding: .9rem 1.1rem; margin-bottom: 1rem; font-size: .92rem; }
+    .post { background: #fff; border-radius: var(--radius); padding: 1.2rem 1.4rem; margin-bottom: 1rem; border: 1px solid var(--line); }
+    .post .meta { display: flex; gap: .6rem; align-items: center; font-size: .82rem; color: var(--muted); margin-bottom: .5rem; }
+    .post h3 { font-size: 1.15rem; }
+    .post p { font-size: .93rem; color: var(--muted); margin-bottom: .8rem; }
+    .post footer { display: flex; justify-content: space-between; font-size: .83rem; color: var(--muted); }
+    .post footer strong { color: var(--text); }
+
+    aside .panel { background: var(--white); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.2rem; border: 1px solid var(--line); }
+    aside .panel.accent { background: var(--soft-teal); border-color: var(--soft-teal); }
+    .advocate { background: #fff; border-radius: 10px; padding: 1rem; margin: 1rem 0; }
+    .advocate .badge { font-size: .78rem; background: var(--lavender); padding: .1rem .6rem; border-radius: 999px; color: var(--deep-teal); }
+    .guidelines-list { list-style: none; padding: 0; margin: 1rem 0; font-size: .9rem; display: grid; gap: .5rem; }
+
+    /* ---------- Join banner ---------- */
+    .join { background: var(--white); padding: 4rem 0; }
+    .join-box {
+      background: var(--deep-teal); color: #fff; border-radius: 18px; padding: 2.5rem;
+      display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; flex-wrap: wrap;
+    }
+    .join-box h2 { color: #fff; }
+    .join-box p { color: #D5EBE8; margin: 0; }
+    .join-box .btn { background: #fff; color: var(--deep-teal); border-color: #fff; }
+
+    /* ---------- Footer ---------- */
+    .site-footer { background: var(--soft-blue); padding: 3rem 0 1.5rem; font-size: .92rem; }
+    .footer-grid { display: grid; grid-template-columns: 1.4fr repeat(3, 1fr); gap: 2rem; }
+    .footer-grid h3 { font: 700 .95rem var(--sans); }
+    .footer-grid ul { list-style: none; padding: 0; margin: 0; display: grid; gap: .4rem; }
+    .disclaimer { border-top: 1px solid var(--line); margin-top: 2rem; padding-top: 1.2rem; color: var(--muted); font-size: .85rem; }
+    .copyright { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; color: var(--muted); font-size: .82rem; }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 860px) {
+      .hero-grid, .conv-layout, .footer-grid { grid-template-columns: 1fr; }
+      .trust-grid { grid-template-columns: 1fr; }
+      .hero-quote { left: .8rem; }
+      .nav ul { gap: 1rem; flex-wrap: wrap; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <!-- ===== HEADER ===== -->
+  <header class="site-header">
+    <div class="container nav">
+      <a class="logo" href="#">kindred</a>
+      <nav aria-label="Main navigation">
+        <ul>
+          <li><a href="#communities">Community</a></li>
+          <li><a href="#support">Find support</a></li>
+          <li><a href="#resources">Resources</a></li>
+          <li><a href="#about">About us</a></li>
+          <li><a href="#contact">Contact us</a></li>
+        </ul>
+      </nav>
+      <div class="nav-actions">
+        <a class="login" href="#">Log in</a>
+        <a class="btn btn-primary" href="#join">Join Kindred</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ===== HERO ===== -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container hero-grid">
+        <div>
+          <p class="tagline">Different journeys. Shared understanding.</p>
+          <h1 id="hero-title">A place to feel understood.</h1>
+          <p class="lead">Life with a rare or chronic illness can feel isolating. Find people who get it, share the everyday, and connect with advocates who can help you find your way.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#communities">Find your community</a>
+            <a class="btn btn-outline" href="#about">How Kindred works</a>
+          </div>
+          <p class="muted" style="font-size:.85rem">Free to join. Come as you are. Share when you're ready.</p>
+        </div>
+
+        <figure class="hero-figure">
+          <!-- Replace src with your own image and write alt text that describes it -->
+          <img src="images/hero.jpg" alt="Three people of different ages smiling together at an outdoor table"
+               onerror="this.style.visibility='hidden'">
+          <figcaption class="hero-quote">
+            Some days, "me too" means everything.
+            <small>A little understanding goes a long way.</small>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ===== TRUST STRIP ===== -->
+    <div class="trust">
+      <div class="container trust-grid">
+        <div><strong>People first. Always moderated.</strong><span>Human care behind every community.</span></div>
+        <div><strong>Your story, on your terms.</strong><span>Use a screen name. Choose what to share.</span></div>
+        <div><strong>Shared experience, not medical advice.</strong><span>Support alongside your healthcare team.</span></div>
+      </div>
+    </div>
+
+    <!-- ===== COMMUNITY GROUPS ===== -->
+    <section class="groups" id="communities" aria-labelledby="groups-title">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2 id="groups-title">Find your people.</h2>
+            <p class="muted" style="margin:0">A shared diagnosis. A familiar feeling. A place to begin.</p>
+          </div>
+          <form class="search" role="search" onsubmit="return false">
+            <label for="group-search">Search a condition or community</label>
+            <input id="group-search" type="search" placeholder="Search a condition or community">
+          </form>
+        </div>
+
+        <div class="card-grid">
+          <a class="group-card" href="#">
+            <h3>Lupus &amp; autoimmune</h3>
+            <p>Navigating the unpredictable, together.</p>
+            <p class="stats">2.4k members <b>18 new conversations this week</b></p>
+          </a>
+          <a class="group-card" href="#">
+            <h3>ME/CFS &amp; long COVID</h3>
+            <p>A space to connect, at your own pace.</p>
+            <p class="stats">3.1k members <b>24 new conversations this week</b></p>
+          </a>
+          <a class="group-card" href="#">
+            <h3>EDS &amp; hypermobility</h3>
+            <p>Shared experiences. A little less explaining.</p>
+            <p class="stats">1.8k members <b>12 new conversations this week</b></p>
+          </a>
+          <a class="group-card" href="#">
+            <h3>Living with chronic pain</h3>
+            <p>The everyday, with people who understand.</p>
+            <p class="stats">4.2k members <b>31 new conversations this week</b></p>
+          </a>
+        </div>
+
+        <div class="chips">
+          <span class="muted" style="font-size:.85rem">Also here for you</span>
+          <a class="chip" href="#">Rare conditions</a>
+          <a class="chip" href="#">Still seeking a diagnosis</a>
+          <a class="chip lavender" href="#">Caregivers &amp; loved ones</a>
+          <a href="#" style="margin-left:auto;font-weight:700;font-size:.9rem">Browse all communities</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CONVERSATIONS + SUPPORT SIDEBAR ===== -->
+    <section class="conversations" aria-labelledby="conv-title">
+      <div class="container conv-layout">
+        <div>
+          <div class="section-head">
+            <div>
+              <h2 id="conv-title">The everyday, shared.</h2>
+              <p class="muted" style="margin:0">Honest questions. Small victories. A listening ear.</p>
+            </div>
+            <a class="btn btn-outline" href="#">Start a conversation</a>
+          </div>
+
+          <div class="tabs" role="tablist" aria-label="Conversation filters">
+            <button role="tab" aria-selected="true">Active conversations</button>
+            <button role="tab" aria-selected="false">Newest</button>
+            <button role="tab" aria-selected="false">Needs a reply</button>
+          </div>
+
+          <div class="welcome-note">
+            <strong>New here? There's no right way to begin.</strong><br>
+            Say hello, look around, or just listen. A note from our moderators.
+          </div>
+
+          <article class="post">
+            <div class="meta"><span class="chip">ME/CFS &amp; long COVID</span> Daily life</div>
+            <h3><a href="#" style="text-decoration:none">What does a "small win" look like for you this week?</a></h3>
+            <p>Mine was sitting outside with my tea for ten minutes. Learning that small doesn't mean it doesn't count. I'd love to hear yours.</p>
+            <footer><span><strong>SundaySky</strong> · 2 hours ago</span><span>24 replies</span></footer>
+          </article>
+
+          <article class="post">
+            <div class="meta"><span class="chip">EDS &amp; hypermobility</span> Appointments</div>
+            <h3><a href="#" style="text-decoration:none">How do you prepare when there's so much to explain?</a></h3>
+            <p>I have my first appointment with a new specialist next week. What helps you organize your questions without feeling overwhelmed?</p>
+            <footer><span><strong>FernAndTea</strong> · 4 hours ago</span><span>16 replies</span></footer>
+          </article>
+
+          <article class="post">
+            <div class="meta"><span class="chip">Living with chronic pain</span> Relationships</div>
+            <h3><a href="#" style="text-decoration:none">Finding the words for friends who don't quite get it</a></h3>
+            <p>I want to stay connected, but I keep cancelling plans. How do you talk about your limits while still making room for friendship?</p>
+            <footer><span><strong>QuietlyGrowing</strong> · 6 hours ago</span><span>9 replies</span></footer>
+          </article>
+
+          <p style="text-align:center"><a href="#" style="font-weight:700">Explore all conversations</a></p>
+        </div>
+
+        <aside id="support" aria-label="Support and community guidelines">
+          <div class="panel accent">
+            <h3>You don't have to figure it out alone.</h3>
+            <p style="font-size:.92rem">Patient advocates can help you prepare for visits, explore resources, and find your next step.</p>
+            <div class="advocate">
+              <strong>Maya Patel</strong><br>
+              <span class="badge">Community verified</span>
+              <p class="muted" style="font-size:.85rem;margin:.6rem 0 0">Care navigation · Visit preparation</p>
+            </div>
+            <a class="btn btn-primary" href="#">Explore patient advocates</a>
+            <p style="font-size:.78rem;margin:1rem 0 0">Advocates offer guidance and support, not diagnosis or treatment.</p>
+          </div>
+
+          <div class="panel" id="guidelines">
+            <h3>A safer space to share.</h3>
+            <p style="font-size:.9rem">Our guidelines put kindness, consent, and your privacy first.</p>
+            <ul class="guidelines-list">
+              <li>Screen names welcome</li>
+              <li>Report a concern on any post</li>
+              <li>Human moderators review reports</li>
+            </ul>
+            <a href="#" style="font-weight:700;font-size:.9rem">Our community promise</a>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ===== JOIN BANNER ===== -->
+    <section class="join" id="join" aria-labelledby="join-title">
+      <div class="container">
+        <div class="join-box">
+          <div>
+            <h2 id="join-title">There's room for you here.</h2>
+            <p>You don't need the right words, or even a diagnosis, to belong. Start with a look around. We'll be here when you're ready.</p>
+          </div>
+          <div>
+            <a class="btn" href="#">Join Kindred, it's free</a>
+            <p style="font-size:.8rem;margin-top:.6rem">A screen name is all you need to be seen.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer" id="contact">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a class="logo" href="#">kindred</a>
+          <p class="muted" style="margin-top:.6rem">A little less alone in life with a rare or chronic illness. Built around people, not conditions.</p>
+        </div>
+        <nav aria-label="Find connection">
+          <h3>Find connection</h3>
+          <ul>
+            <li><a href="#communities">All communities</a></li>
+            <li><a href="#">Patient advocates</a></li>
+            <li><a href="#">Community conversations</a></li>
+          </ul>
+        </nav>
+        <nav aria-label="Feel at home">
+          <h3>Feel at home</h3>
+          <ul>
+            <li><a href="#">How Kindred works</a></li>
+            <li><a href="#guidelines">Community guidelines</a></li>
+            <li><a href="#">Help &amp; accessibility</a></li>
+          </ul>
+        </nav>
+        <nav aria-label="Our commitment" id="about">
+          <h3>Our commitment</h3>
+          <ul>
+            <li><a href="#">About Kindred</a></li>
+            <li><a href="#">Privacy &amp; your data</a></li>
+            <li><a href="#">Contact our team</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <p class="disclaimer">
+        Kindred is for peer support and shared experiences, not medical advice, diagnosis, or treatment. Speak with a qualified healthcare professional about your care. This community is not an emergency service. If you are in immediate danger, contact your local emergency services.
+      </p>
+      <div class="copyright">
+        <span>© 2026 Kindred. Together, in our own ways.</span>
+        <span><a href="#">Privacy</a> · <a href="#">Terms</a> · <a href="#">Cookie preferences</a></span>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
